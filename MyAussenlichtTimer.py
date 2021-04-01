@@ -6,10 +6,12 @@ AUSSENLICHT_URL = "http://192.168.178.78"
 LATITUDE = 50.0212981
 LONGITUDE = 9.2554408
 
+
 class AussenlichtState(Enum):
     OFF = 0
     ON = 1
     NO_ACTION = 2
+
 
 def is_server_available():
     response = requests.get(AUSSENLICHT_URL)
@@ -19,58 +21,67 @@ def is_server_available():
     else:
         return False
 
+
 def turn_light_on(verbose):
-    requests.post(AUSSENLICHT_URL+"/?ON")
+    requests.post(AUSSENLICHT_URL + "/?ON")
     if verbose is True:
         print("Außenlicht ON")
 
+
 def turn_light_off(verbose):
-    requests.post(AUSSENLICHT_URL+"/?OFF")
+    requests.post(AUSSENLICHT_URL + "/?OFF")
     if verbose is True:
         print("Außenlicht OFF")
 
+
 def get_sunrise_and_sunset(today=None):
     sun = Sun(lat=LATITUDE, lon=LONGITUDE)
-    if today==None:
+    if today == None:
         today_sunrise = sun.get_local_sunrise_time()
         today_sunset = sun.get_local_sunset_time()
     else:
         today_sunrise = sun.get_local_sunrise_time(today)
         today_sunset = sun.get_local_sunset_time(today)
-        
+
     return [today_sunrise, today_sunset]
 
-def toggle_aussenlicht_with_sun(tzinfo, iterations=60*3, delay_in_secs=1, verbose=True, now=None):
+
+def toggle_aussenlicht_with_sun(
+    tzinfo, iterations=60 * 3, delay_in_secs=1, verbose=True, now=None
+):
     for i in range(iterations):
-            state = AussenlichtState.NO_ACTION
-            
-            if now == None:
-                now = datetime.datetime.now(tzinfo)        
+        state = AussenlichtState.NO_ACTION
 
-            sun_rise_and_set_list = get_sunrise_and_sunset(now)
-            sunrise_time = sun_rise_and_set_list[0]
-            sunset_time = sun_rise_and_set_list[1]
+        if now == None:
+            now = datetime.datetime.now(tzinfo)
 
-            midnight = sunset_time.replace(hour=23, minute=59)
-            last_midnight = sunrise_time.replace(hour=0, minute=1)
+        sun_rise_and_set_list = get_sunrise_and_sunset(now)
+        sunrise_time = sun_rise_and_set_list[0]
+        sunset_time = sun_rise_and_set_list[1]
 
-            print("now: {n}\t last_midnight: {lm}\t midnight: {m}\t sunrise: {sr}\t sunset: {ss}\t".format(n=now, lm=last_midnight, m=midnight, sr=sunrise_time, ss=sunset_time))
+        midnight = sunset_time.replace(hour=23, minute=59)
+        last_midnight = sunrise_time.replace(hour=0, minute=1)
 
-            if last_midnight < now < sunset_time:
-                turn_light_off(verbose)
-                state = AussenlichtState.OFF    
-            elif sunset_time < now < midnight:
-                turn_light_on(verbose)
-                state = AussenlichtState.ON
-            else:
-                print("No Action")
-            
-            time.sleep(delay_in_secs)
-            return state
-            
+        print(
+            "now: {n}\t last_midnight: {lm}\t midnight: {m}\t sunrise: {sr}\t sunset: {ss}\t".format(
+                n=now, lm=last_midnight, m=midnight, sr=sunrise_time, ss=sunset_time
+            )
+        )
+
+        if last_midnight < now < sunset_time:
+            turn_light_off(verbose)
+            state = AussenlichtState.OFF
+        elif sunset_time < now < midnight:
+            turn_light_on(verbose)
+            state = AussenlichtState.ON
+        else:
+            print("No Action")
+
+        time.sleep(delay_in_secs)
+        return state
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     print("Fetching sunrise and sunset times...")
     sun_rise_and_set_list = get_sunrise_and_sunset()
     print(sun_rise_and_set_list)
@@ -79,5 +90,5 @@ if __name__=="__main__":
     tzinfo = sunrise_time.tzinfo
 
     print("Testing Conncetion to Server...")
-    if (is_server_available() is True):
-        toggle_aussenlicht_with_sun(tzinfo=tzinfo)    
+    if is_server_available() is True:
+        toggle_aussenlicht_with_sun(tzinfo=tzinfo)
