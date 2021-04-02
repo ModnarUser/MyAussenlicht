@@ -36,16 +36,16 @@ def main():
     sunrise_time = sun_rise_and_set_list[0]
     sunset_time = sun_rise_and_set_list[1]
     
-    print("Testing Conncetion to Sever...")
+    print("Testing Conncetion to Server...")
     if (is_server_available() is True):
         while True:
             now = datetime.datetime.now(sunrise_time.tzinfo)        
             midnight = sunset_time.replace(hour=23, minute=59)
             last_midnight = midnight.replace(hour=0, minute=0)
             
-            print("\nCurrent Time is:", now)
-            print("Sunset Today: ", sunset_time)
-            print("Sunrise Today: ", sunrise_time)
+            # print("\nCurrent Time is:", now)
+            # print("Sunset Today: ", sunset_time)
+            # print("Sunrise Today: ", sunrise_time)
             #print(midnight)
             #print(last_midnight)
 
@@ -58,9 +58,9 @@ def main():
             
             time.sleep(60*5)
             
-            print("Fetching sunrise and sunset times...")
+            #print("Fetching sunrise and sunset times...")
             sun_rise_and_set_list = get_sunrise_and_sunset()
-            print(sun_rise_and_set_list)
+            #print(sun_rise_and_set_list)
             sunrise_time = sun_rise_and_set_list[0]
             sunset_time = sun_rise_and_set_list[1]
 main()
