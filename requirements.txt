@@ -1,3 +1,5 @@
 requests
 suntime
 pytest
+sure
+httpretty

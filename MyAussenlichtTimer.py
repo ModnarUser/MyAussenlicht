@@ -2,40 +2,43 @@ import requests, time, datetime
 from enum import Enum
 from suntime import Sun, SunTimeException
 
-AUSSENLICHT_URL = "http://192.168.178.78"
-LATITUDE = 50.0212981
-LONGITUDE = 9.2554408
-
-
 class AussenlichtState(Enum):
     OFF = 0
     ON = 1
     NO_ACTION = 2
 
+class AussenlichtConfig():
+    AUSSENLICHT_URL = "http://192.168.178.78"
+    LATITUDE = 50.0212981
+    LONGITUDE = 9.2554408
+
 
 def is_server_available():
-    response = requests.get(AUSSENLICHT_URL)
+    url = AussenlichtConfig.AUSSENLICHT_URL
+    response = requests.get(url)
     if response.status_code == 200:
-        print("Connection to {s} successful!".format(s=AUSSENLICHT_URL))
+        print("Connection to {s} successful!".format(s=url))
         return True
     else:
         return False
 
 
 def turn_light_on(verbose):
-    requests.post(AUSSENLICHT_URL + "/?ON")
+    url = AussenlichtConfig.AUSSENLICHT_URL
+    requests.post(url + "/?ON")
     if verbose is True:
         print("Außenlicht ON")
 
 
 def turn_light_off(verbose):
-    requests.post(AUSSENLICHT_URL + "/?OFF")
+    url = AussenlichtConfig.AUSSENLICHT_URL
+    requests.post(url + "/?OFF")
     if verbose is True:
         print("Außenlicht OFF")
 
 
 def get_sunrise_and_sunset(today=None):
-    sun = Sun(lat=LATITUDE, lon=LONGITUDE)
+    sun = Sun(lat=AussenlichtConfig.LATITUDE, lon=AussenlichtConfig.LONGITUDE)
     if today == None:
         today_sunrise = sun.get_local_sunrise_time()
         today_sunset = sun.get_local_sunset_time()
@@ -90,5 +93,5 @@ if __name__ == "__main__":
     tzinfo = sunrise_time.tzinfo
 
     print("Testing Conncetion to Server...")
-    if is_server_available() is True:
+    if is_server_available(AussenlichtConfig.AUSSENLICHT_URL) is True:
         toggle_aussenlicht_with_sun(tzinfo=tzinfo)
