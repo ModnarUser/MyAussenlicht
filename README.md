@@ -51,10 +51,29 @@ Now you can toggle the Aussenlicht by simply pressing the `ON` or `OFF` button.
 * At least Python 3.6
 * cron
 ### Example Setup using a QNAP2
+Launch a shell and connect to your QNAP2 via SSH.
+>Note: SSH has to be enabled through the web UI of your QNAP2
+```bash
+ssh admin@qnap2
+```
+Pull this repo from GitHub and unzip it.
+```bash
+cd home/myapps
+wget XX
+unzip XX 
+```
+
+Write the currently running cronjobs to a file.
+```bash
+crontab -l > cronfile
+vi cronfile
+```
+_to be continued_
+
 ### Testing
 Install all python requirements via
 
-```Powershell
+```bash
 pip install -r requirements.txt
 ```
 
@@ -69,7 +88,7 @@ TEST_URL = "http://192.168.178.XX"  # Use URL of your Aussenlicht
 ```
 Navigate into the toplevel directory (`*/MyAussenlicht`) and run the tests.
 
-```Powershell
+```bash
 pytest test_MyAussenlichtTimer.py
 ```
 When all tests were run successfully you should get the following output:
