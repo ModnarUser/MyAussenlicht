@@ -23,14 +23,14 @@ def is_server_available():
         return False
 
 
-def turn_light_on(verbose):
+def turn_light_on(verbose=False):
     url = AussenlichtConfig.AUSSENLICHT_URL
     requests.post(url + "/?ON")
     if verbose is True:
         print("Außenlicht ON")
 
 
-def turn_light_off(verbose):
+def turn_light_off(verbose=False):
     url = AussenlichtConfig.AUSSENLICHT_URL
     requests.post(url + "/?OFF")
     if verbose is True:
@@ -93,5 +93,5 @@ if __name__ == "__main__":
     tzinfo = sunrise_time.tzinfo
 
     print("Testing Conncetion to Server...")
-    if is_server_available(AussenlichtConfig.AUSSENLICHT_URL) is True:
+    if is_server_available() is True:
         toggle_aussenlicht_with_sun(tzinfo=tzinfo)
