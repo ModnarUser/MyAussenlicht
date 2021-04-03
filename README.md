@@ -59,8 +59,8 @@ ssh admin@qnap2
 Pull this repo from GitHub and unzip it.
 ```bash
 cd home/myapps
-wget XX
-unzip XX 
+wget https://github.com/ModnarUser/MyAussenlicht/archive/refs/heads/master.zip
+unzip MyAussenlicht-master.zip
 ```
 
 Write the currently running cronjobs to a file.
