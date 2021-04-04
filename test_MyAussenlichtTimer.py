@@ -87,10 +87,10 @@ def test_toggle_aussenlicht():
             iterations=1,
             delay_in_secs=0.0001,
             verbose=False,
-            now=date_list[i].replace(tzinfo=sunrise_time.tzinfo),
+            now=date_list[i].replace(tzinfo=tzinfo),
         )
         states.append(
-            [date_list[i].replace(tzinfo=sunrise_time.tzinfo), int(state.value)]
+            [date_list[i].replace(tzinfo=tzinfo), int(state.value)]
         )
 
     file = open("test_MyAussenlicht.csv", "w+", newline="")
