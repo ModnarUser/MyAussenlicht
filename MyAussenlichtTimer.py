@@ -59,11 +59,11 @@ def toggle_aussenlicht_with_sun(
             now = datetime.datetime.now(tzinfo)
 
         sun_rise_and_set_list = get_sunrise_and_sunset(now)
-        sunrise_time = sun_rise_and_set_list[0]
-        sunset_time = sun_rise_and_set_list[1]
+        sunrise_time = sun_rise_and_set_list[0].replace(tzinfo=tzinfo)
+        sunset_time = sun_rise_and_set_list[1].replace(tzinfo=tzinfo)
 
-        midnight = sunset_time.replace(hour=23, minute=59)
-        last_midnight = sunrise_time.replace(hour=0, minute=1)
+        midnight = sunset_time.replace(hour=23, minute=59, tzinfo=tzinfo)
+        last_midnight = sunrise_time.replace(hour=0, minute=1, tzinfo=tzinfo)
 
         print(
             "now: {n}\t last_midnight: {lm}\t midnight: {m}\t sunrise: {sr}\t sunset: {ss}\t".format(
