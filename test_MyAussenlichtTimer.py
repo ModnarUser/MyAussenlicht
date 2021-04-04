@@ -98,7 +98,9 @@ def test_toggle_aussenlicht():
     with file:
         write = csv.writer(file)
         write.writerows(states)
+    
+    a = open("Ressources/valid_log.csv", "r").read()
+    b = open("test_MyAussenlicht.csv", "r").read()
 
-    result = filecmp.cmp("Ressources/valid_log.csv", "test_MyAussenlicht.csv")
-    assert result == True
+    assert a == b
     httpretty.disable()
