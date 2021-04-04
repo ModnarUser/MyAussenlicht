@@ -74,9 +74,11 @@ def test_toggle_aussenlicht():
     httpretty.register_uri(httpretty.POST, Al.AussenlichtConfig.AUSSENLICHT_URL+"/?ON")
 
     sun_rise_and_set_list = Al.get_sunrise_and_sunset()
-    sunrise_time = sun_rise_and_set_list[0]
-    sunset_time = sun_rise_and_set_list[1]
+    
     tzinfo = datetime.timezone(datetime.timedelta(hours=2))
+    sunrise_time = sun_rise_and_set_list[0].replace(tzinfo=tzinfo)
+    sunset_time = sun_rise_and_set_list[1].replace(tzinfo=tzinfo)
+    
 
 
     states = []
