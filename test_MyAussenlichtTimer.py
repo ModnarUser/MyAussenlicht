@@ -14,7 +14,8 @@ import requests
 
 TEST_URL = "http://192.168.178.78"  # Use URL of your Aussenlicht
 Al.AussenlichtConfig.AUSSENLICHT_URL = TEST_URL
-Today = datetime.datetime(2021, 3, 31, 0, 0, 0, 597403)
+
+Today = datetime.datetime(2021, 3, 31, 0, 0, 0, 597403, datetime.timezone(datetime.timedelta(hours=2)))
 
 ################################################################
 # Helper Functions
