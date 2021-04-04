@@ -77,7 +77,9 @@ Pull this repo from GitHub and unzip it.
 ```bash
 cd home/myapps
 wget https://github.com/ModnarUser/MyAussenlicht/archive/refs/heads/master.zip
-unzip MyAussenlicht-master.zip
+unzip master.zip
+sudo rm -rf master.zip
+cd MyAussenlicht-master
 ```
 
 Write the currently running cronjobs to a file.
