@@ -75,7 +75,7 @@ def test_toggle_aussenlicht():
     sun_rise_and_set_list = Al.get_sunrise_and_sunset()
     sunrise_time = sun_rise_and_set_list[0]
     sunset_time = sun_rise_and_set_list[1]
-    tzinfo = datetime.datetime(tzinfo=2)
+    tzinfo = datetime.tzinfo(2)
 
     states = []
     date_list = generate_list_of_datetimes()
