@@ -68,7 +68,25 @@ The plot below shows the output of running `MyAussenlichtTimer.py` concurrently 
 ![Automated Switching of the Aussenlicht with Sunrise and Sunset](Doc/AutomatedSwitching.svg)
 
 ### Example Setup using a QNAP2
-_coming soon_
+Launch a shell and connect to your QNAP2 via SSH.
+>Note: SSH has to be enabled through the web UI of your QNAP2
+```bash
+ssh admin@qnap2
+```
+Pull this repo from GitHub and unzip it.
+```bash
+cd home/myapps
+wget https://github.com/ModnarUser/MyAussenlicht/archive/refs/heads/master.zip
+unzip MyAussenlicht-master.zip
+```
+
+Write the currently running cronjobs to a file.
+```bash
+crontab -l > cronfile
+vi cronfile
+```
+_to be continued_
+
 ### Testing
 Install all python requirements via
 
