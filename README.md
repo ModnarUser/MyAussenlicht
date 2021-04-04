@@ -46,15 +46,33 @@ Grab a device already connected to your local network and access the IP address 
 Now you can toggle the Aussenlicht by simply pressing the `ON` or `OFF` button.
 
 ## Automated Remote Control
+With the python file `MyAussenlichtTimer.py` you can automatically switch the Aussenlicht with sunrise and sunset. By default, the outdoor light will be switched on upon sunset and switched off at midnight. 
 ### Requirements
 * Machine that is permanently connected to your local Network (e.g. Raspberry Pi, NAS, etc.)
 * At least Python 3.6
-* cron
+### Running It
+Before using it with your Aussenlicht you will have to edit the properties of the `AussenlichtConfig` in the `MyAussenlichtTimer.py` file.
+
+```Python
+class AussenlichtConfig():
+    AUSSENLICHT_URL = "http://192.168.178.XX" # Enter the URL of your ESP server 
+    LATITUDE = 50.0212981 # Enter the latitude of your geo-location
+    LONGITUDE = 9.2554408 # Enter the longitude of your geo-location
+```
+Next, you can execute it.
+```bash
+python MyAussenlichtTimer.py
+```
+
+The plot below shows the output of running `MyAussenlichtTimer.py` concurrently every 5 minutes. 
+![Automated Switching of the Aussenlicht with Sunrise and Sunset](Doc/AutomatedSwitching.svg)
+
 ### Example Setup using a QNAP2
+_coming soon_
 ### Testing
 Install all python requirements via
 
-```Powershell
+```bash
 pip install -r requirements.txt
 ```
 
@@ -69,12 +87,12 @@ TEST_URL = "http://192.168.178.XX"  # Use URL of your Aussenlicht
 ```
 Navigate into the toplevel directory (`*/MyAussenlicht`) and run the tests.
 
-```Powershell
+```bash
 pytest test_MyAussenlichtTimer.py
 ```
 When all tests were run successfully you should get the following output:
 
-```Powershell
+```bash
 PS D:\MyAussenlicht> pytest .\test_MyAussenlichtTimer.py
 ================================================================= test session starts ==================================================================
 platform win32 -- Python 3.7.9, pytest-6.1.2, py-1.9.0, pluggy-0.13.1
