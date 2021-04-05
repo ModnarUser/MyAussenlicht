@@ -58,7 +58,7 @@ def toggle_aussenlicht_with_sun(
         if now == None:
             now = datetime.datetime.now(tzinfo)
 
-        sun_rise_and_set_list = get_sunrise_and_sunset(now)
+        sun_rise_and_set_list = get_sunrise_and_sunset(now.replace(tzinfo=tzinfo))
         sunrise_time = sun_rise_and_set_list[0].replace(tzinfo=tzinfo)
         sunset_time = sun_rise_and_set_list[1].replace(tzinfo=tzinfo)
 
