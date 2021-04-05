@@ -95,14 +95,14 @@ def test_toggle_aussenlicht():
             [date_list[i].replace(tzinfo=tzinfo), int(state.value)]
         )
 
-    file = open("test_MyAussenlicht.csv", "w+", newline="")
+    file = open("./test_MyAussenlicht.csv", "w+", newline="")
 
     with file:
         write = csv.writer(file)
         write.writerows(states)
     
-    a = open("Ressources/valid_log.csv", "r").read()
-    b = open("test_MyAussenlicht.csv", "r").read()
+    a = open("./Ressources/valid_log.csv", "r").read()
+    b = open("./test_MyAussenlicht.csv", "r").read()
 
     assert a == b
     httpretty.disable()
