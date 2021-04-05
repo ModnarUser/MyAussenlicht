@@ -3,7 +3,7 @@ import datetime
 from enum import Enum
 import csv
 import pytest
-import filecmp
+import pytz
 import sure
 import httpretty
 import requests
@@ -15,7 +15,7 @@ import requests
 TEST_URL = "http://192.168.178.78"  # Use URL of your Aussenlicht
 Al.AussenlichtConfig.AUSSENLICHT_URL = TEST_URL
 
-Today = datetime.datetime(2021, 3, 31, 0, 0, 0, 597403, datetime.timezone(datetime.timedelta(hours=2)))
+Today = datetime.datetime(2021, 3, 31, 0, 0, 0, 597403, tzinfo=pytz.utc+datetime.timedelta(hours=2))
 
 ################################################################
 # Helper Functions
@@ -75,7 +75,7 @@ def test_toggle_aussenlicht():
 
     sun_rise_and_set_list = Al.get_sunrise_and_sunset(Today)
     
-    tzinfo = datetime.timezone(datetime.timedelta(hours=2))
+    tzinfo = pytz.utc+datetime.timedelta(hours=2))
     sunrise_time = sun_rise_and_set_list[0].replace(tzinfo=tzinfo)
     sunset_time = sun_rise_and_set_list[1].replace(tzinfo=tzinfo)
     
