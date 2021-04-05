@@ -75,7 +75,7 @@ def test_toggle_aussenlicht():
 
     sun_rise_and_set_list = Al.get_sunrise_and_sunset(Today)
     
-    tzinfo = pytz.utc+datetime.timedelta(hours=2))
+    tzinfo = pytz.utc+datetime.timedelta(hours=2)
     sunrise_time = sun_rise_and_set_list[0].replace(tzinfo=tzinfo)
     sunset_time = sun_rise_and_set_list[1].replace(tzinfo=tzinfo)
     
