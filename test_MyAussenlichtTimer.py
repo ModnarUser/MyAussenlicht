@@ -113,7 +113,7 @@ def test_specific_datetimes(test_time, aussenlicht_state):
             verbose=False,
             now=test_time,
         )
-
+    httpretty.disable()
     assert(state == aussenlicht_state)
 
 
