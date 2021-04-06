@@ -1,12 +1,8 @@
 import MyAussenlichtTimer as Al
 import datetime
-from enum import Enum
 import csv
 import pytest
-import pytz
-import sure
 import httpretty
-import requests
 
 ################################################################
 # Test Settings
@@ -48,7 +44,7 @@ def test_is_server_available():
         httpretty.GET, Al.AussenlichtConfig.AUSSENLICHT_URL, status=200
     )
 
-    assert Al.is_server_available() == True
+    assert Al.is_server_available() is True
     httpretty.disable()
 
 
@@ -135,11 +131,7 @@ def test_simulate_for_number_of_days():
         httpretty.POST, Al.AussenlichtConfig.AUSSENLICHT_URL + "/?ON"
     )
 
-    sun_rise_and_set_list = Al.get_sunrise_and_sunset(Today)
-
     tzinfo = datetime.timezone(datetime.timedelta(hours=2))
-    sunrise_time = sun_rise_and_set_list[0].replace(tzinfo=tzinfo)
-    sunset_time = sun_rise_and_set_list[1].replace(tzinfo=tzinfo)
 
     states = []
     date_list = generate_list_of_datetimes()

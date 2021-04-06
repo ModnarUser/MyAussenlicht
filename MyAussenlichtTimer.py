@@ -1,13 +1,17 @@
-import requests, time, datetime
+import requests
+import time
+import datetime
 from enum import Enum
-from suntime import Sun, SunTimeException
+from suntime import Sun
+
 
 class AussenlichtState(Enum):
     OFF = 0
     ON = 1
     NO_ACTION = 2
 
-class AussenlichtConfig():
+
+class AussenlichtConfig:
     AUSSENLICHT_URL = "http://192.168.178.78"
     LATITUDE = 50.0212981
     LONGITUDE = 9.2554408
@@ -39,7 +43,7 @@ def turn_light_off(verbose=False):
 
 def get_sunrise_and_sunset(today=None):
     sun = Sun(lat=AussenlichtConfig.LATITUDE, lon=AussenlichtConfig.LONGITUDE)
-    if today == None:
+    if today is None:
         today_sunrise = sun.get_local_sunrise_time()
         today_sunset = sun.get_local_sunset_time()
     else:
@@ -55,7 +59,7 @@ def toggle_aussenlicht_with_sun(
     for i in range(iterations):
         state = AussenlichtState.NO_ACTION
 
-        if now == None:
+        if now is None:
             now = datetime.datetime.now(tzinfo)
 
         sun_rise_and_set_list = get_sunrise_and_sunset(now)
@@ -66,8 +70,10 @@ def toggle_aussenlicht_with_sun(
         last_midnight = sunrise_time.replace(hour=0, minute=1)
 
         print(
-            "now: {n}\t last_midnight: {lm}\t midnight: {m}\t sunrise: {sr}\t sunset: {ss}\t".format(
-                n=now, lm=last_midnight, m=midnight, sr=sunrise_time, ss=sunset_time
+            "now: {n}\t last_midnight: {lm}\t midnight: {m}\t sunrise: {sr}\t \
+                sunset: {ss}\t".format(
+                n=now, lm=last_midnight, m=midnight, sr=sunrise_time,
+                ss=sunset_time
             )
         )
 
