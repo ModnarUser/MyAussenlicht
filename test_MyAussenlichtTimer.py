@@ -15,11 +15,15 @@ import requests
 TEST_URL = "http://192.168.178.78"  # Use URL of your Aussenlicht
 Al.AussenlichtConfig.AUSSENLICHT_URL = TEST_URL
 
-Today = datetime.datetime(2021, 3, 31, 0, 0, 0, 597403, tzinfo=datetime.timezone(datetime.timedelta(hours=2)))
+Today = datetime.datetime(
+    2021, 3, 31, 0, 0, 0, 597403, tzinfo=datetime.timezone(datetime.timedelta(hours=2))
+)
+TEST_TZINFO = datetime.timezone(datetime.timedelta(hours=2))
 
 ################################################################
 # Helper Functions
 ################################################################
+
 
 def generate_list_of_datetimes():
     date_list = []
@@ -31,55 +35,111 @@ def generate_list_of_datetimes():
     date_list = date_list_1 + date_list_2 + date_list_3
     return date_list
 
+
 ################################################################
 # Test Cases
 ################################################################
 
+
 @httpretty.activate
 def test_is_server_available():
     httpretty.enable()
-    httpretty.register_uri(httpretty.GET, Al.AussenlichtConfig.AUSSENLICHT_URL, status=200)
+    httpretty.register_uri(
+        httpretty.GET, Al.AussenlichtConfig.AUSSENLICHT_URL, status=200
+    )
 
-    assert(Al.is_server_available() == True)
+    assert Al.is_server_available() == True
     httpretty.disable()
+
 
 @httpretty.activate
 def test_turn_light_on():
     httpretty.enable()
-    httpretty.register_uri(httpretty.POST, Al.AussenlichtConfig.AUSSENLICHT_URL+"/?ON")
+    httpretty.register_uri(
+        httpretty.POST, Al.AussenlichtConfig.AUSSENLICHT_URL + "/?ON"
+    )
     Al.turn_light_on(verbose=False)
     req = httpretty.last_request()
-    assert(req.method == "POST")
-    url = "http://" + req.headers.get('Host', '') + req.path
-    assert(url == Al.AussenlichtConfig.AUSSENLICHT_URL+"/?ON")
+    assert req.method == "POST"
+    url = "http://" + req.headers.get("Host", "") + req.path
+    assert url == Al.AussenlichtConfig.AUSSENLICHT_URL + "/?ON"
     httpretty.disable()
+
 
 @httpretty.activate
 def test_turn_light_off():
     httpretty.enable()
-    httpretty.register_uri(httpretty.POST, Al.AussenlichtConfig.AUSSENLICHT_URL+"/?OFF")
+    httpretty.register_uri(
+        httpretty.POST, Al.AussenlichtConfig.AUSSENLICHT_URL + "/?OFF"
+    )
     Al.turn_light_off(verbose=False)
     req = httpretty.last_request()
-    assert(req.method == "POST")
-    url = "http://" + req.headers.get('Host', '') + req.path
-    assert(url == Al.AussenlichtConfig.AUSSENLICHT_URL+"/?OFF")
+    assert req.method == "POST"
+    url = "http://" + req.headers.get("Host", "") + req.path
+    assert url == Al.AussenlichtConfig.AUSSENLICHT_URL + "/?OFF"
     httpretty.disable()
 
-@httpretty.activate
-def test_toggle_aussenlicht():
-    httpretty.enable()
-    httpretty.register_uri(httpretty.GET, Al.AussenlichtConfig.AUSSENLICHT_URL, status=200)
 
-    httpretty.register_uri(httpretty.POST, Al.AussenlichtConfig.AUSSENLICHT_URL+"/?OFF")
-    httpretty.register_uri(httpretty.POST, Al.AussenlichtConfig.AUSSENLICHT_URL+"/?ON")
+@pytest.mark.parametrize(
+    "test_time, aussenlicht_state",
+    [
+        (
+            datetime.datetime(2021, 3, 31, 0, 0, 0, 597403, tzinfo=TEST_TZINFO),
+            Al.AussenlichtState.NO_ACTION,
+        ),
+        (
+            datetime.datetime(2021, 6, 15, 13, 0, 0, 597403, tzinfo=TEST_TZINFO),
+            Al.AussenlichtState.OFF,
+        ),
+        (
+            datetime.datetime(2021, 12, 1, 21, 0, 0, 597403, tzinfo=TEST_TZINFO),
+            Al.AussenlichtState.ON,
+        ),
+    ],
+)
+@httpretty.activate
+def test_specific_datetimes(test_time, aussenlicht_state):
+    httpretty.enable()
+    httpretty.register_uri(
+        httpretty.GET, Al.AussenlichtConfig.AUSSENLICHT_URL, status=200
+    )
+
+    httpretty.register_uri(
+        httpretty.POST, Al.AussenlichtConfig.AUSSENLICHT_URL + "/?OFF"
+    )
+    httpretty.register_uri(
+        httpretty.POST, Al.AussenlichtConfig.AUSSENLICHT_URL + "/?ON"
+    )
+    state = Al.toggle_aussenlicht_with_sun(
+            tzinfo=TEST_TZINFO,
+            iterations=1,
+            delay_in_secs=0.0001,
+            verbose=False,
+            now=test_time,
+        )
+
+    assert(state == aussenlicht_state)
+
+
+@httpretty.activate
+def test_simulate_for_number_of_days():
+    httpretty.enable()
+    httpretty.register_uri(
+        httpretty.GET, Al.AussenlichtConfig.AUSSENLICHT_URL, status=200
+    )
+
+    httpretty.register_uri(
+        httpretty.POST, Al.AussenlichtConfig.AUSSENLICHT_URL + "/?OFF"
+    )
+    httpretty.register_uri(
+        httpretty.POST, Al.AussenlichtConfig.AUSSENLICHT_URL + "/?ON"
+    )
 
     sun_rise_and_set_list = Al.get_sunrise_and_sunset(Today)
-    
+
     tzinfo = datetime.timezone(datetime.timedelta(hours=2))
     sunrise_time = sun_rise_and_set_list[0].replace(tzinfo=tzinfo)
     sunset_time = sun_rise_and_set_list[1].replace(tzinfo=tzinfo)
-    
-
 
     states = []
     date_list = generate_list_of_datetimes()
@@ -91,16 +151,14 @@ def test_toggle_aussenlicht():
             verbose=False,
             now=date_list[i].replace(tzinfo=tzinfo),
         )
-        states.append(
-            [date_list[i], int(state.value)]
-        )
+        states.append([date_list[i], int(state.value)])
 
     file = open("./test_MyAussenlicht.csv", "w+", newline="")
 
     with file:
         write = csv.writer(file)
         write.writerows(states)
-    
+
     a = open("./Ressources/valid_log.csv", "r").read()
     b = open("./test_MyAussenlicht.csv", "r").read()
 
