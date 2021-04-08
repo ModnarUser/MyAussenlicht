@@ -70,11 +70,15 @@ The plot below shows the output of running `MyAussenlichtTimer.py` concurrently 
 ![Automated Switching of the Aussenlicht with Sunrise and Sunset](Doc/AutomatedSwitching.svg)
 
 ### Example Setup using a QNAP2
-Launch a shell and connect to your QNAP2 via SSH.
->Note: SSH has to be enabled through the web UI of your QNAP2
+Log into your qnap2 via a browser of your choice.
+![qnap url](Doc/qnap_access.PNG)
+
+Install the `Container Station` from the `AppCenter` and setup a `Ubuntu 18.0` container according to [these instructions](https://www.qnap.com/en/how-to/tutorial/article/how-to-use-container-station). Once the container is setup, launch a shell inside it and set a password for the ubuntu user.
 ```bash
-ssh admin@qnap2
+passwd ubuntu
 ```
+
+
 Pull this repo from GitHub and unzip it.
 ```bash
 cd home/myapps
