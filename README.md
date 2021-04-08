@@ -71,17 +71,23 @@ The plot below shows the output of running `MyAussenlichtTimer.py` concurrently 
 
 ### Example Setup using a QNAP2
 Log into your qnap2 via a browser of your choice.
+
 ![qnap url](Doc/qnap_access.PNG)
 
 Install the `Container Station` from the `AppCenter` and setup a `Ubuntu 18.0` container according to [these instructions](https://www.qnap.com/en/how-to/tutorial/article/how-to-use-container-station). Once the container is setup, launch a shell inside it and set a password for the ubuntu user.
 ```bash
 passwd ubuntu
 ```
-
+Next, install the following packages.
+```
+sudo apt update && sudo apt upgrade
+sudo apt install wget unzip python3-pip nano python3
+```
 
 Pull this repo from GitHub and unzip it.
 ```bash
-cd home/myapps
+cd /home
+mkdir myapps && cd myapps
 wget https://github.com/ModnarUser/MyAussenlicht/archive/refs/heads/master.zip
 unzip master.zip
 sudo rm -rf master.zip
@@ -91,6 +97,7 @@ cd MyAussenlicht-master
 Write the currently running cronjobs to a file.
 ```bash
 crontab -l > cronfile
+*/4 * * * * /usr/bin/python3 /home/ubuntu/myapps/MyAssenlicht-master/MyAussenlichtTimer.py
 vi cronfile
 ```
 _to be continued_
