@@ -79,28 +79,39 @@ Install the `Container Station` from the `AppCenter` and setup a `Ubuntu 18.0` c
 passwd ubuntu
 ```
 Next, install the following packages.
-```
+```bash
 sudo apt update && sudo apt upgrade
 sudo apt install wget unzip python3-pip nano python3
 ```
 
 Pull this repo from GitHub and unzip it.
 ```bash
-cd /home
+cd /home/ubuntu
 mkdir myapps && cd myapps
 wget https://github.com/ModnarUser/MyAussenlicht/archive/refs/heads/master.zip
 unzip master.zip
 sudo rm -rf master.zip
 cd MyAussenlicht-master
 ```
+Install the utilized Python libraries and make `MyAussenlichtTimer.py` executable.
+```bash
+python3 -m pip install -r requirements.txt
+chmod +x MyAussenlichtTimer.py
+```
 
 Write the currently running cronjobs to a file.
 ```bash
-crontab -l > cronfile
-*/4 * * * * /usr/bin/python3 /home/ubuntu/myapps/MyAssenlicht-master/MyAussenlichtTimer.py
-vi cronfile
+sudo crontab -l > cronfile
 ```
-_to be continued_
+Open the file with `nano cronfile` and add the following line:
+```bash
+*/4 * * * * /usr/bin/python3 /home/ubuntu/myapps/MyAssenlicht-master/MyAussenlichtTimer.py
+```
+Pass the edited cronfile to `crontab` in order to run the `MyAussenlichtTimer.py` concurrently.
+```bash
+sudo crontab cronfile
+```
+Finally, you can check if the cronjob was successfully added with `sudo cronjob -l`.
 
 ### Testing
 Install all python requirements via
