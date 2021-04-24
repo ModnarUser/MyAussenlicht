@@ -137,13 +137,12 @@ pytest test_MyAussenlichtTimer.py
 When all tests were run successfully you should get the following output:
 
 ```bash
-PS D:\MyAussenlicht> pytest .\test_MyAussenlichtTimer.py
-================================================================= test session starts ==================================================================
-platform win32 -- Python 3.7.9, pytest-6.1.2, py-1.9.0, pluggy-0.13.1
-rootdir: D:\MyAussenlicht
-collected 4 items
+==================== test session starts =====================
+platform linux -- Python 3.8.2, pytest-6.2.3, py-1.10.0, pluggy-0.13.1
+rootdir: /data/data/com.termux/files/home/Documents/gitrepos/MyAussenlicht
+collected 7 items
 
-test_MyAussenlichtTimer.py ....                                                                                                                   [100%] 
+test_MyAussenlichtTimer.py .......                     [100%]
 
-======================================================= 4 passed in 68.29s (0:01:08) ======================================================== 
+===================== 7 passed in 46.44s =====================
 ```
