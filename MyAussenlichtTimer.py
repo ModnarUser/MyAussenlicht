@@ -25,28 +25,60 @@ class TimeCache:
         self.last_midnight = last_midnight
 
 
-def is_server_available():
-    url = AussenlichtConfig.AUSSENLICHT_URL
-    response = requests.get(url)
-    if response.status_code == 200:
-        print("Connection to {s} successful!".format(s=url))
-        return True
-    else:
-        return False
+class Networking:
+    def __init__(self, AussenlichtConfig):
+        self.url = AussenlichtConfig.AUSSENLICHT_URL
+
+    def is_server_available(self):
+        url = self.url
+        response = requests.get(url)
+        if response.status_code == 200:
+            print("Connection to {s} successful!".format(s=url))
+            return True
+        else:
+            return False
+
+    def turn_light_on(self, verbose=False):
+        url = self.url
+        requests.post(url + "/?ON")
+        if verbose is True:
+            print("Außenlicht ON")
+
+    def turn_light_off(self, verbose=False):
+        url = self.url
+        requests.post(url + "/?OFF")
+        if verbose is True:
+            print("Außenlicht OFF")
 
 
-def turn_light_on(verbose=False):
-    url = AussenlichtConfig.AUSSENLICHT_URL
-    requests.post(url + "/?ON")
-    if verbose is True:
-        print("Außenlicht ON")
+class Evaluate:
+    def __init__(self, TimeCache, now):
+        self.TimeObject = TimeCache
+        self.now = now
+
+    def aussenlicht_state(self):
+        state = AussenlichtState.NO_ACTION
+        to = self.TimeObject
+        now = self.now
+        if to.last_midnight < now < to.sunset:
+            state = AussenlichtState.OFF
+        elif to.sunset < now < to.midnight:
+            state = AussenlichtState.ON
+        else:
+            print("No Action")
+        return state
 
 
-def turn_light_off(verbose=False):
-    url = AussenlichtConfig.AUSSENLICHT_URL
-    requests.post(url + "/?OFF")
-    if verbose is True:
-        print("Außenlicht OFF")
+class Output:
+    @staticmethod
+    def print_times(TimeObject, now):
+        t = TimeObject
+        print(
+            "now: {n}\t last_midnight: {lm}\t midnight: {m}\t sunrise: {sr}\t \
+                sunset: {ss}\t".format(
+                n=now, lm=t.last_midnight, m=t.midnight, sr=t.sunrise, ss=t.sunset
+            )
+        )
 
 
 def set_time_events_for_today(today=None):
@@ -70,6 +102,7 @@ def set_time_events_for_today(today=None):
 def toggle_aussenlicht_with_sun(
     tzinfo, iterations=60 * 3, delay_in_secs=1, verbose=True, now=None
 ):
+    Network = Networking(AussenlichtConfig)
     for i in range(iterations):
         state = AussenlichtState.NO_ACTION
 
@@ -82,24 +115,19 @@ def toggle_aussenlicht_with_sun(
         midnight = TodaysTimeEvents.midnight
         last_midnight = TodaysTimeEvents.last_midnight
 
-        print(
-            "now: {n}\t last_midnight: {lm}\t midnight: {m}\t sunrise: {sr}\t \
-                sunset: {ss}\t".format(
-                n=now, lm=last_midnight, m=midnight, sr=sunrise_time, ss=sunset_time
-            )
-        )
+        Output.print_times(TodaysTimeEvents, now)
+        Eval = Evaluate(TodaysTimeEvents, now)
+        state_to_set = Eval.aussenlicht_state()
 
-        if last_midnight < now < sunset_time:
-            turn_light_off(verbose)
-            state = AussenlichtState.OFF
-        elif sunset_time < now < midnight:
-            turn_light_on(verbose)
-            state = AussenlichtState.ON
+        if state_to_set == AussenlichtState.OFF:
+            Network.turn_light_off(verbose)
+        elif state_to_set == AussenlichtState.ON:
+            Network.turn_light_on(verbose)
         else:
-            print("No Action")
+            pass
 
         time.sleep(delay_in_secs)
-        return state
+        return state_to_set
 
 
 if __name__ == "__main__":
@@ -111,5 +139,5 @@ if __name__ == "__main__":
     tzinfo = sunrise_time.tzinfo
 
     print("Testing Conncetion to Server...")
-    if is_server_available() is True:
+    if Networking.is_server_available() is True:
         toggle_aussenlicht_with_sun(tzinfo=tzinfo)

@@ -1,4 +1,5 @@
 import MyAussenlichtTimer as Al
+from MyAussenlichtTimer import Networking
 import datetime
 import csv
 import pytest
@@ -25,8 +26,12 @@ def generate_list_of_datetimes():
     date_list = []
 
     date_list_1 = [Today + datetime.timedelta(minutes=x) for x in range(0, 24 * 60)]
-    date_list_2 = [Today + datetime.timedelta(days=1, minutes=x) for x in range(0, 24 * 60)]
-    date_list_3 = [Today + datetime.timedelta(days=2, minutes=x) for x in range(0, 24 * 60)]
+    date_list_2 = [
+        Today + datetime.timedelta(days=1, minutes=x) for x in range(0, 24 * 60)
+    ]
+    date_list_3 = [
+        Today + datetime.timedelta(days=2, minutes=x) for x in range(0, 24 * 60)
+    ]
 
     date_list = date_list_1 + date_list_2 + date_list_3
     return date_list
@@ -43,36 +48,36 @@ def test_is_server_available():
     httpretty.register_uri(
         httpretty.GET, Al.AussenlichtConfig.AUSSENLICHT_URL, status=200
     )
-
-    assert Al.is_server_available() is True
+    Network = Networking(Al.AussenlichtConfig)
+    assert Network.is_server_available() is True
     httpretty.disable()
 
 
 @httpretty.activate
 def test_turn_light_on():
+    Network = Networking(Al.AussenlichtConfig)
     httpretty.enable()
-    httpretty.register_uri(
-        httpretty.POST, Al.AussenlichtConfig.AUSSENLICHT_URL + "/?ON"
-    )
-    Al.turn_light_on(verbose=False)
+    httpretty.register_uri(httpretty.POST, Network.url + "/?ON")
+
+    Network.turn_light_on(verbose=False)
     req = httpretty.last_request()
     assert req.method == "POST"
     url = "http://" + req.headers.get("Host", "") + req.path
-    assert url == Al.AussenlichtConfig.AUSSENLICHT_URL + "/?ON"
+    assert url == Network.url + "/?ON"
     httpretty.disable()
 
 
 @httpretty.activate
 def test_turn_light_off():
+    Network = Networking(Al.AussenlichtConfig)
     httpretty.enable()
-    httpretty.register_uri(
-        httpretty.POST, Al.AussenlichtConfig.AUSSENLICHT_URL + "/?OFF"
-    )
-    Al.turn_light_off(verbose=False)
+    httpretty.register_uri(httpretty.POST, Network.url + "/?OFF")
+
+    Network.turn_light_off(verbose=False)
     req = httpretty.last_request()
     assert req.method == "POST"
     url = "http://" + req.headers.get("Host", "") + req.path
-    assert url == Al.AussenlichtConfig.AUSSENLICHT_URL + "/?OFF"
+    assert url == Network.url + "/?OFF"
     httpretty.disable()
 
 
@@ -95,41 +100,31 @@ def test_turn_light_off():
 )
 @httpretty.activate
 def test_specific_datetimes(test_time, aussenlicht_state):
+    Network = Networking(Al.AussenlichtConfig)
     httpretty.enable()
-    httpretty.register_uri(
-        httpretty.GET, Al.AussenlichtConfig.AUSSENLICHT_URL, status=200
-    )
+    httpretty.register_uri(httpretty.GET, Network.url, status=200)
 
-    httpretty.register_uri(
-        httpretty.POST, Al.AussenlichtConfig.AUSSENLICHT_URL + "/?OFF"
-    )
-    httpretty.register_uri(
-        httpretty.POST, Al.AussenlichtConfig.AUSSENLICHT_URL + "/?ON"
-    )
+    httpretty.register_uri(httpretty.POST, Network.url + "/?OFF")
+    httpretty.register_uri(httpretty.POST, Network.url + "/?ON")
     state = Al.toggle_aussenlicht_with_sun(
-            tzinfo=TEST_TZINFO,
-            iterations=1,
-            delay_in_secs=0.0001,
-            verbose=False,
-            now=test_time,
-        )
+        tzinfo=TEST_TZINFO,
+        iterations=1,
+        delay_in_secs=0.0001,
+        verbose=False,
+        now=test_time,
+    )
     httpretty.disable()
-    assert(state == aussenlicht_state)
+    assert state == aussenlicht_state
 
 
 @httpretty.activate
 def test_simulate_for_number_of_days():
+    Network = Networking(Al.AussenlichtConfig)
     httpretty.enable()
-    httpretty.register_uri(
-        httpretty.GET, Al.AussenlichtConfig.AUSSENLICHT_URL, status=200
-    )
+    httpretty.register_uri(httpretty.GET, Network.url, status=200)
 
-    httpretty.register_uri(
-        httpretty.POST, Al.AussenlichtConfig.AUSSENLICHT_URL + "/?OFF"
-    )
-    httpretty.register_uri(
-        httpretty.POST, Al.AussenlichtConfig.AUSSENLICHT_URL + "/?ON"
-    )
+    httpretty.register_uri(httpretty.POST, Network.url + "/?OFF")
+    httpretty.register_uri(httpretty.POST, Network.url + "/?ON")
 
     tzinfo = datetime.timezone(datetime.timedelta(hours=2))
 
