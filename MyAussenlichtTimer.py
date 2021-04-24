@@ -110,11 +110,6 @@ def toggle_aussenlicht_with_sun(
             now = datetime.datetime.now(tzinfo)
 
         TodaysTimeEvents = set_time_events_for_today(now)
-        sunrise_time = TodaysTimeEvents.sunrise
-        sunset_time = TodaysTimeEvents.sunset
-        midnight = TodaysTimeEvents.midnight
-        last_midnight = TodaysTimeEvents.last_midnight
-
         Output.print_times(TodaysTimeEvents, now)
         Eval = Evaluate(TodaysTimeEvents, now)
         state_to_set = Eval.aussenlicht_state()
