@@ -17,6 +17,14 @@ class AussenlichtConfig:
     LONGITUDE = 9.2554408
 
 
+class TimeCache:
+    def __init__(self, sunrise, sunset, midnight, last_midnight):
+        self.sunrise = sunrise
+        self.sunset = sunset
+        self.midnight = midnight
+        self.last_midnight = last_midnight
+
+
 def is_server_available():
     url = AussenlichtConfig.AUSSENLICHT_URL
     response = requests.get(url)
@@ -41,7 +49,7 @@ def turn_light_off(verbose=False):
         print("Außenlicht OFF")
 
 
-def get_sunrise_and_sunset(today=None):
+def set_time_events_for_today(today=None):
     sun = Sun(lat=AussenlichtConfig.LATITUDE, lon=AussenlichtConfig.LONGITUDE)
     if today is None:
         today_sunrise = sun.get_local_sunrise_time()
@@ -50,7 +58,13 @@ def get_sunrise_and_sunset(today=None):
         today_sunrise = sun.get_local_sunrise_time(today)
         today_sunset = sun.get_local_sunset_time(today)
 
-    return [today_sunrise, today_sunset]
+    TodaysTimes = TimeCache(
+        sunrise=today_sunrise,
+        sunset=today_sunset,
+        midnight=today_sunset.replace(hour=23, minute=59),
+        last_midnight=today_sunrise.replace(hour=0, minute=1),
+    )
+    return TodaysTimes
 
 
 def toggle_aussenlicht_with_sun(
@@ -62,18 +76,16 @@ def toggle_aussenlicht_with_sun(
         if now is None:
             now = datetime.datetime.now(tzinfo)
 
-        sun_rise_and_set_list = get_sunrise_and_sunset(now)
-        sunrise_time = sun_rise_and_set_list[0]
-        sunset_time = sun_rise_and_set_list[1]
-
-        midnight = sunset_time.replace(hour=23, minute=59)
-        last_midnight = sunrise_time.replace(hour=0, minute=1)
+        TodaysTimeEvents = set_time_events_for_today(now)
+        sunrise_time = TodaysTimeEvents.sunrise
+        sunset_time = TodaysTimeEvents.sunset
+        midnight = TodaysTimeEvents.midnight
+        last_midnight = TodaysTimeEvents.last_midnight
 
         print(
             "now: {n}\t last_midnight: {lm}\t midnight: {m}\t sunrise: {sr}\t \
                 sunset: {ss}\t".format(
-                n=now, lm=last_midnight, m=midnight, sr=sunrise_time,
-                ss=sunset_time
+                n=now, lm=last_midnight, m=midnight, sr=sunrise_time, ss=sunset_time
             )
         )
 
@@ -92,10 +104,10 @@ def toggle_aussenlicht_with_sun(
 
 if __name__ == "__main__":
     print("Fetching sunrise and sunset times...")
-    sun_rise_and_set_list = get_sunrise_and_sunset()
-    print(sun_rise_and_set_list)
-    sunrise_time = sun_rise_and_set_list[0]
-    sunset_time = sun_rise_and_set_list[1]
+    TodaysTimeEvents = set_time_events_for_today()
+    sunrise_time = TodaysTimeEvents.sunrise
+    sunset_time = TodaysTimeEvents.sunset
+    print("sunrise: {rise}\nsunset: {set}\n".format(rise=sunrise_time, set=sunset_time))
     tzinfo = sunrise_time.tzinfo
 
     print("Testing Conncetion to Server...")
