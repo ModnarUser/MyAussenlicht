@@ -34,4 +34,5 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
+        cd Python
         pytest test_MyAussenlichtTimer.py --deselect test_MyAussenlichtTimer.py::test_simulate_for_number_of_days
