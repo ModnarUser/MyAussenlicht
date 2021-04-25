@@ -24,6 +24,10 @@ class TimeCache:
         self.midnight = midnight
         self.last_midnight = last_midnight
 
+    def get_timezone_info(self):
+        tzinfo = self.sunrise.tzinfo
+        return tzinfo
+
 
 class Networking:
     def __init__(self, AussenlichtConfig):
@@ -56,7 +60,7 @@ class Evaluate:
         self.TimeObject = TimeCache
         self.now = now
 
-    def aussenlicht_state(self):
+    def compute_aussenlicht_state(self):
         state = AussenlichtState.NO_ACTION
         to = self.TimeObject
         now = self.now
@@ -111,8 +115,8 @@ def toggle_aussenlicht_with_sun(
 
         TodaysTimeEvents = set_time_events_for_today(now)
         Output.print_times(TodaysTimeEvents, now)
-        Eval = Evaluate(TodaysTimeEvents, now)
-        state_to_set = Eval.aussenlicht_state()
+        EvaluateTimes = Evaluate(TodaysTimeEvents, now)
+        state_to_set = EvaluateTimes.compute_aussenlicht_state()
 
         if state_to_set == AussenlichtState.OFF:
             Network.turn_light_off(verbose)
@@ -128,10 +132,9 @@ def toggle_aussenlicht_with_sun(
 if __name__ == "__main__":
     print("Fetching sunrise and sunset times...")
     TodaysTimeEvents = set_time_events_for_today()
-    sunrise_time = TodaysTimeEvents.sunrise
-    sunset_time = TodaysTimeEvents.sunset
-    print("sunrise: {rise}\nsunset: {set}\n".format(rise=sunrise_time, set=sunset_time))
-    tzinfo = sunrise_time.tzinfo
+    tzinfo = TodaysTimeEvents.get_timezone_info()
+    now = datetime.datetime.now(tzinfo)
+    Output.print_times(TodaysTimeEvents, now)
 
     print("Testing Conncetion to Server...")
     if Networking.is_server_available() is True:
