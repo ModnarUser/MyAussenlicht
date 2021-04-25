@@ -4,11 +4,7 @@ from suntime import Sun
 from Stdout import Printer
 import TimeEvents as te
 from Networking import Networking
-
-class AussenlichtConfig:
-    AUSSENLICHT_URL = "http://192.168.178.78"
-    LATITUDE = 50.0212981
-    LONGITUDE = 9.2554408
+from Config import AussenlichtConfig
 
 
 if __name__ == "__main__":

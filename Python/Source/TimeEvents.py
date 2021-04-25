@@ -1,7 +1,7 @@
 import time
 import datetime
 from suntime import Sun
-from MyAussenlichtTimer import AussenlichtConfig
+from Config import AussenlichtConfig
 from Networking import Networking
 from Stdout import Printer
 from Computation import Evaluate
