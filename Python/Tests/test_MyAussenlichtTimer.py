@@ -1,6 +1,7 @@
-from Source import MyAussenlichtTimer as Al
+from Source import Config
 from Source import Networking as Net
 from Net import Networking 
+from Computation import AussenlichtState
 import datetime
 import csv
 import pytest
@@ -11,7 +12,7 @@ import httpretty
 ################################################################
 
 TEST_URL = "http://192.168.178.78"  # Use URL of your Aussenlicht
-Al.AussenlichtConfig.AUSSENLICHT_URL = TEST_URL
+Config.AUSSENLICHT_URL = TEST_URL
 
 Today = datetime.datetime(
     2021, 3, 31, 0, 0, 0, 597403, tzinfo=datetime.timezone(datetime.timedelta(hours=2))
@@ -51,27 +52,27 @@ def generate_list_of_datetimes():
     [
         (
             datetime.datetime(2021, 3, 31, 0, 0, 0, 597403, tzinfo=TEST_TZINFO),
-            Al.AussenlichtState.NO_ACTION,
+            AussenlichtState.NO_ACTION,
         ),
         (
             datetime.datetime(2021, 6, 15, 13, 0, 0, 597403, tzinfo=TEST_TZINFO),
-            Al.AussenlichtState.OFF,
+            AussenlichtState.OFF,
         ),
         (
             datetime.datetime(2021, 12, 1, 21, 0, 0, 597403, tzinfo=TEST_TZINFO),
-            Al.AussenlichtState.ON,
+            AussenlichtState.ON,
         ),
     ],
 )
 @httpretty.activate
 def test_specific_datetimes(test_time, aussenlicht_state):
-    Network = Networking(Al.AussenlichtConfig)
+    Network = Networking(Config)
     httpretty.enable()
     httpretty.register_uri(httpretty.GET, Network.url, status=200)
 
     httpretty.register_uri(httpretty.POST, Network.url + "/?OFF")
     httpretty.register_uri(httpretty.POST, Network.url + "/?ON")
-    state = Al.toggle_aussenlicht_with_sun(
+    state = toggle_aussenlicht_with_sun(
         tzinfo=TEST_TZINFO,
         iterations=1,
         delay_in_secs=0.0001,
@@ -84,7 +85,7 @@ def test_specific_datetimes(test_time, aussenlicht_state):
 
 @httpretty.activate
 def test_simulate_for_number_of_days():
-    Network = Networking(Al.AussenlichtConfig)
+    Network = Networking(Config)
     httpretty.enable()
     httpretty.register_uri(httpretty.GET, Network.url, status=200)
 
@@ -96,7 +97,7 @@ def test_simulate_for_number_of_days():
     states = []
     date_list = generate_list_of_datetimes()
     for i in range(len(date_list)):
-        state = Al.toggle_aussenlicht_with_sun(
+        state = toggle_aussenlicht_with_sun(
             tzinfo=tzinfo,
             iterations=1,
             delay_in_secs=0.0001,

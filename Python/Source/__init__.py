@@ -1,5 +1,5 @@
 from . import Computation
-# from . import MyAussenlichtTimer
+from . import Config
 from . import Networking
 from . import Stdout
 # from . import TimeEvents
