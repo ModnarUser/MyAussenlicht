@@ -18,7 +18,7 @@ Next, navigate to the board manager in the Arduino IDE and install the esp8266 l
 
 ![ESP-Lib](Doc/Board_overlay.PNG)
 
-Open the `MyAussenlicht.ino`-file and replace the SSID and password in the following lines with your SSID and password:
+Open the `MyAussenlicht.ino`-file in the `Embedded` directory and replace the SSID and password in the following lines with your SSID and password:
 ```CPP
 #ifndef STASSID
 #define STASSID "YOUR_SSID"
@@ -48,7 +48,7 @@ Grab a device already connected to your local network and access the IP address 
 Now you can toggle the Aussenlicht by simply pressing the `ON` or `OFF` button.
 
 ## Automated Remote Control
-With the python file `MyAussenlichtTimer.py` you can automatically switch the Aussenlicht with sunrise and sunset. By default, the outdoor light will be switched on upon sunset and switched off at midnight. 
+With the python file `MyAussenlichtTimer.py` in the `Python` directory you can automatically switch the Aussenlicht with sunrise and sunset. By default, the outdoor light will be switched on upon sunset and switched off at midnight. 
 ### Requirements
 * Machine that is permanently connected to your local Network (e.g. Raspberry Pi, NAS, etc.)
 * At least Python 3.6
@@ -63,6 +63,7 @@ class AussenlichtConfig():
 ```
 Next, you can execute it.
 ```bash
+cd Python
 python MyAussenlichtTimer.py
 ```
 
@@ -91,7 +92,7 @@ mkdir myapps && cd myapps
 wget https://github.com/ModnarUser/MyAussenlicht/archive/refs/heads/master.zip
 unzip master.zip
 sudo rm -rf master.zip
-cd MyAussenlicht-master
+cd MyAussenlicht-master/Python
 ```
 Install the utilized Python libraries and make `MyAussenlichtTimer.py` executable.
 ```bash
@@ -105,7 +106,7 @@ sudo crontab -l > cronfile
 ```
 Open the file with `nano cronfile` and add the following line:
 ```bash
-*/4 * * * * /usr/bin/python3 /home/ubuntu/myapps/MyAssenlicht-master/MyAussenlichtTimer.py
+*/4 * * * * /usr/bin/python3 /home/ubuntu/myapps/MyAssenlicht-master/Python/MyAussenlichtTimer.py
 ```
 Pass the edited cronfile to `crontab` in order to run the `MyAussenlichtTimer.py` concurrently.
 ```bash
@@ -129,7 +130,7 @@ Modify the `TEST_URL` in `test_MyAussenlichtTimer.py` to fit your server URL.
 TEST_URL = "http://192.168.178.XX"  # Use URL of your Aussenlicht
 
 ```
-Navigate into the toplevel directory (`*/MyAussenlicht`) and run the tests.
+Navigate into the toplevel Python directory (`*/MyAussenlicht/Python`) and run the tests.
 
 ```bash
 pytest test_MyAussenlichtTimer.py
