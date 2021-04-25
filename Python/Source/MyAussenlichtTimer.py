@@ -1,9 +1,9 @@
 import time
 import datetime
 from suntime import Sun
-from Networking import Networking
 from Stdout import Printer
 import TimeEvents as te
+from Networking import Networking
 
 class AussenlichtConfig:
     AUSSENLICHT_URL = "http://192.168.178.78"

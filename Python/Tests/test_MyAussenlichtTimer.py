@@ -1,5 +1,6 @@
-import MyAussenlichtTimer as Al
-from MyAussenlichtTimer import Networking
+from Source import MyAussenlichtTimer as Al
+from Source import Networking as Net
+from Net import Networking 
 import datetime
 import csv
 import pytest
@@ -42,43 +43,7 @@ def generate_list_of_datetimes():
 ################################################################
 
 
-@httpretty.activate
-def test_is_server_available():
-    httpretty.enable()
-    httpretty.register_uri(
-        httpretty.GET, Al.AussenlichtConfig.AUSSENLICHT_URL, status=200
-    )
-    Network = Networking(Al.AussenlichtConfig)
-    assert Network.is_server_available() is True
-    httpretty.disable()
 
-
-@httpretty.activate
-def test_turn_light_on():
-    Network = Networking(Al.AussenlichtConfig)
-    httpretty.enable()
-    httpretty.register_uri(httpretty.POST, Network.url + "/?ON")
-
-    Network.turn_light_on(verbose=False)
-    req = httpretty.last_request()
-    assert req.method == "POST"
-    url = "http://" + req.headers.get("Host", "") + req.path
-    assert url == Network.url + "/?ON"
-    httpretty.disable()
-
-
-@httpretty.activate
-def test_turn_light_off():
-    Network = Networking(Al.AussenlichtConfig)
-    httpretty.enable()
-    httpretty.register_uri(httpretty.POST, Network.url + "/?OFF")
-
-    Network.turn_light_off(verbose=False)
-    req = httpretty.last_request()
-    assert req.method == "POST"
-    url = "http://" + req.headers.get("Host", "") + req.path
-    assert url == Network.url + "/?OFF"
-    httpretty.disable()
 
 
 @pytest.mark.parametrize(
