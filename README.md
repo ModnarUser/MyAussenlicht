@@ -71,6 +71,7 @@ The plot below shows the output of running `MyAussenlichtTimer.py` concurrently 
 ![Automated Switching of the Aussenlicht with Sunrise and Sunset](Doc/AutomatedSwitching.svg)
 
 ### Example Setup using a QNAP2
+#### Container Setup
 Log into your qnap2 via a browser of your choice.
 
 ![qnap url](Doc/qnap_access.PNG)
@@ -84,7 +85,7 @@ Next, install the following packages.
 sudo apt update && sudo apt upgrade
 sudo apt install wget unzip python3-pip nano python3
 ```
-
+#### Pull Source Code
 Pull this repo from GitHub and unzip it.
 ```bash
 cd /home/ubuntu
@@ -99,6 +100,10 @@ Install the utilized Python libraries and make `MyAussenlichtTimer.py` executabl
 python3 -m pip install -r requirements.txt
 chmod +x MyAussenlichtTimer.py
 ```
+#### Crontab
+> Note: depending on your local setup it might be sufficient to edit the user crontab. If this does not work however, you have to additionally edit the system wide crontab.
+
+__1. User Crontab__
 
 Write the currently running cronjobs to a file.
 ```bash
@@ -106,14 +111,47 @@ sudo crontab -l > cronfile
 ```
 Open the file with `nano cronfile` and add the following line:
 ```bash
-*/4 * * * * /usr/bin/python3 /home/ubuntu/myapps/MyAssenlicht-master/Python/MyAussenlichtTimer.py
+*/4 * * * * /usr/bin/python3 /home/ubuntu/myapps/MyAussenlicht-master/MyAussenlichtTimer.py >> /home/ubuntu/myapps/MyAussenlicht-master/MyAussenlichtTimer.log
 ```
+
 Pass the edited cronfile to `crontab` in order to run the `MyAussenlichtTimer.py` concurrently.
 ```bash
 sudo crontab cronfile
 ```
 Finally, you can check if the cronjob was successfully added with `sudo cronjob -l`.
 
+__2. System Wide Crontab__
+
+Open the system wide crontab at `/etc/crontab`
+```bash
+sudo nano /etc/crontab
+```
+Write the following line to the end of the file.
+```bash
+*/4 * * * * ubuntu /usr/bin/python3 /home/ubuntu/myapps/MyAussenlicht-master/MyAussenlichtTimer.py >> /home/ubuntu/myapps/MyAussenlicht-master/MyAussenlichtTimer.log
+```
+#### Debugging
+__1. Logfile__
+
+The cronjobs will write logging information to the `MyAussenlichtTimer.log` file. You can check if the MyAussenlichtTimer is running as intended by printing the content of the file to stdout.
+```bash
+cat /home/ubuntu/myapps/MyAussenlicht-master/MyAussenlichtTimer.log
+```
+Which will print something like this:
+
+```bash                    
+Connection to http://192.168.178.XX successful!                                                                                                                                                                                                                                                        
+now: 2021-05-01 10:32:02.210094+00:00    last_midnight: 2021-05-01 00:01:00+00:00        midnight: 2021-05-01 23:59:00+00:00     sunrise: 2021-05-01 04:00:00+00:00                      sunset: 2021-05-01 18:41:00+00:00                                                                             
+Außenlicht OFF    
+```
+__2. Get System Time__
+```bash
+date "+%H:%M:%S   %d/%m/%y"
+```
+__3. Print Syslog__
+```bash
+sudo grep CRON /var/log/syslog
+```
 ### Testing
 Install all python requirements via
 
