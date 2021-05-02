@@ -111,7 +111,7 @@ sudo crontab -l > cronfile
 ```
 Open the file with `nano cronfile` and add the following line:
 ```bash
-*/4 * * * * /usr/bin/python3 /home/ubuntu/myapps/MyAussenlicht-master/MyAussenlichtTimer.py >> /home/ubuntu/myapps/MyAussenlicht-master/MyAussenlichtTimer.log
+*/4 * * * * /usr/bin/python3 /home/ubuntu/myapps/MyAussenlicht-master/Python/MyAussenlichtTimer.py >> /home/ubuntu/myapps/MyAussenlicht-master/Python/MyAussenlichtTimer.log
 ```
 
 Pass the edited cronfile to `crontab` in order to run the `MyAussenlichtTimer.py` concurrently.
@@ -128,14 +128,14 @@ sudo nano /etc/crontab
 ```
 Write the following line to the end of the file.
 ```bash
-*/4 * * * * ubuntu /usr/bin/python3 /home/ubuntu/myapps/MyAussenlicht-master/MyAussenlichtTimer.py >> /home/ubuntu/myapps/MyAussenlicht-master/MyAussenlichtTimer.log
+*/4 * * * * ubuntu /usr/bin/python3 /home/ubuntu/myapps/MyAussenlicht-master/Python/MyAussenlichtTimer.py >> /home/ubuntu/myapps/MyAussenlicht-master/Python/MyAussenlichtTimer.log
 ```
 #### Debugging
 __1. Logfile__
 
 The cronjobs will write logging information to the `MyAussenlichtTimer.log` file. You can check if the MyAussenlichtTimer is running as intended by printing the content of the file to stdout.
 ```bash
-cat /home/ubuntu/myapps/MyAussenlicht-master/MyAussenlichtTimer.log
+cat /home/ubuntu/myapps/MyAussenlicht-master/Python/MyAussenlichtTimer.log
 ```
 Which will print something like this:
 
