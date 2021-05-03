@@ -35,5 +35,5 @@ jobs:
     - name: Test with pytest
       run: |
         cd Python/Tests
-        pytest
+        pytest --deselect test_MyAussenlichtTimer.py::test_simulate_for_number_of_days
 
