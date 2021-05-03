@@ -2,7 +2,7 @@ name: Generate TOC
 
 on:
   push:
-    branches: [master restructuredTests]
+    branches: [master, restructuredTests]
     paths: ['README.md']
 
 jobs:
