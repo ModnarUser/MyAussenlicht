@@ -4,11 +4,11 @@
 MyAussenlicht is an ESP2866 based remote control for an outdoor light. A simple server running on the ESP2866, that can be accessed via your local network, is utilized. Two use cases are supported:
 * Manual Remote Control
 * Automated Remote Control with Sunrise and Sunset 
----
+
 # Table of Contents
 <!--ts-->
 <!--te-->
-
+---
 ## 1. Requirements
 * Arduino IDE
 * WROOM-32 ESP2866 Dev kit
