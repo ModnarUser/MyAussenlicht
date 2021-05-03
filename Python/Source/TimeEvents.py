@@ -1,11 +1,20 @@
 import time
 import datetime
 from suntime import Sun
-from Config import AussenlichtConfig
-from Networking import Networking
-from Stdout import Printer
-from Computation import Evaluate
-from Computation import AussenlichtState
+
+# Pretty hacky way to make test work
+try:
+    from .Config import AussenlichtConfig
+    from .Networking import Networking
+    from .Stdout import Printer
+    from .Computation import Evaluate
+    from .Computation import AussenlichtState
+except:
+    from Config import AussenlichtConfig
+    from Networking import Networking
+    from Stdout import Printer
+    from Computation import Evaluate
+    from Computation import AussenlichtState
 
 class TimeCache:
     def __init__(self, sunrise, sunset, midnight, last_midnight):

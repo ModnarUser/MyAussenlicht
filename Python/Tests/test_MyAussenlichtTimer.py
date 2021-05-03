@@ -1,18 +1,20 @@
-from Source import Config
-from Source import Networking as Net
-from Net import Networking 
-from Computation import AussenlichtState
+from Source import AussenlichtConfig
+from Source import Networking
+from Source.Networking import Networking 
+from Source.Computation import AussenlichtState
+from Source import TimeEvents
 import datetime
 import csv
 import pytest
 import httpretty
+import os
 
 ################################################################
 # Test Settings
 ################################################################
 
 TEST_URL = "http://192.168.178.78"  # Use URL of your Aussenlicht
-Config.AUSSENLICHT_URL = TEST_URL
+AussenlichtConfig.AUSSENLICHT_URL = TEST_URL
 
 Today = datetime.datetime(
     2021, 3, 31, 0, 0, 0, 597403, tzinfo=datetime.timezone(datetime.timedelta(hours=2))
@@ -43,10 +45,6 @@ def generate_list_of_datetimes():
 # Test Cases
 ################################################################
 
-
-
-
-
 @pytest.mark.parametrize(
     "test_time, aussenlicht_state",
     [
@@ -66,13 +64,13 @@ def generate_list_of_datetimes():
 )
 @httpretty.activate
 def test_specific_datetimes(test_time, aussenlicht_state):
-    Network = Networking(Config)
+    Network = Networking(AussenlichtConfig)
     httpretty.enable()
     httpretty.register_uri(httpretty.GET, Network.url, status=200)
 
     httpretty.register_uri(httpretty.POST, Network.url + "/?OFF")
     httpretty.register_uri(httpretty.POST, Network.url + "/?ON")
-    state = toggle_aussenlicht_with_sun(
+    state = TimeEvents.toggle_aussenlicht_with_sun(
         tzinfo=TEST_TZINFO,
         iterations=1,
         delay_in_secs=0.0001,
@@ -85,7 +83,7 @@ def test_specific_datetimes(test_time, aussenlicht_state):
 
 @httpretty.activate
 def test_simulate_for_number_of_days():
-    Network = Networking(Config)
+    Network = Networking(AussenlichtConfig)
     httpretty.enable()
     httpretty.register_uri(httpretty.GET, Network.url, status=200)
 
@@ -97,7 +95,7 @@ def test_simulate_for_number_of_days():
     states = []
     date_list = generate_list_of_datetimes()
     for i in range(len(date_list)):
-        state = toggle_aussenlicht_with_sun(
+        state = TimeEvents.toggle_aussenlicht_with_sun(
             tzinfo=tzinfo,
             iterations=1,
             delay_in_secs=0.0001,
@@ -106,14 +104,15 @@ def test_simulate_for_number_of_days():
         )
         states.append([date_list[i], int(state.value)])
 
-    file = open("./test_MyAussenlicht.csv", "w+", newline="")
+    cwd = os.path.dirname(os.path.realpath(__file__)).replace("\\", "//").replace("//", "/")
+    file = open("{cwd}/test_MyAussenlicht.csv".format(cwd=cwd), "w+", newline="")
 
     with file:
         write = csv.writer(file)
         write.writerows(states)
 
-    a = open("./Ressources/valid_log.csv", "r").read()
-    b = open("./test_MyAussenlicht.csv", "r").read()
+    a = open("{cwd}/Ressources/valid_log.csv".format(cwd=cwd), "r").read()
+    b = open("{cwd}/test_MyAussenlicht.csv".format(cwd=cwd), "r").read()
 
     assert a == b
     httpretty.disable()
