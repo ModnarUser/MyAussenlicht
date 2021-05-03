@@ -5,15 +5,16 @@ MyAussenlicht is an ESP2866 based remote control for an outdoor light. A simple 
 * Manual Remote Control
 * Automated Remote Control with Sunrise and Sunset 
 
+## Table of Contents
 <!--ts-->
 <!--te-->
 
-## Requirements
+## 1. Requirements
 * Arduino IDE
 * WROOM-32 ESP2866 Dev kit
 * ESP-Arduino Lib
 * ESP Board Files
-## Build and Run
+## 2. Build and Run
 Start the Arduino IDE and make sure you have the latest ESP-Lib installed:
 
 ![ESP-Lib](Doc/ESP_lib.PNG)
@@ -44,19 +45,19 @@ WiFi connected
 Server started
 192.168.178.XX
 ```
-## Manual Remote Control
+## 3. Manual Remote Control
 Grab a device already connected to your local network and access the IP address from above (`192.168.178.XX`).
 
 ![Landing Page For Remote Control](Doc/LandingPage.PNG)
 
 Now you can toggle the Aussenlicht by simply pressing the `ON` or `OFF` button.
 
-## Automated Remote Control
+## 4. Automated Remote Control
 With the python file `MyAussenlichtTimer.py` in the `Python` directory you can automatically switch the Aussenlicht with sunrise and sunset. By default, the outdoor light will be switched on upon sunset and switched off at midnight. 
-### Requirements
+### 4.1 Requirements
 * Machine that is permanently connected to your local Network (e.g. Raspberry Pi, NAS, etc.)
 * At least Python 3.6
-### Running It
+### 4.2 Running It
 Before using it with your Aussenlicht you will have to edit the properties of the `AussenlichtConfig` in the `MyAussenlichtTimer.py` file.
 
 ```Python
@@ -74,8 +75,8 @@ python MyAussenlichtTimer.py
 The plot below shows the output of running `MyAussenlichtTimer.py` concurrently every 5 minutes. 
 ![Automated Switching of the Aussenlicht with Sunrise and Sunset](Doc/AutomatedSwitching.svg)
 
-### Example Setup using a QNAP2
-#### Container Setup
+### 4.3 Example Setup using a QNAP2
+#### 4.3.1 Container Setup
 Log into your qnap2 via a browser of your choice.
 
 ![qnap url](Doc/qnap_access.PNG)
@@ -89,7 +90,7 @@ Next, install the following packages.
 sudo apt update && sudo apt upgrade
 sudo apt install wget unzip python3-pip nano python3
 ```
-#### Pull Source Code
+#### 4.3.2 Pull Source Code
 Pull this repo from GitHub and unzip it.
 ```bash
 cd /home/ubuntu
@@ -104,7 +105,7 @@ Install the utilized Python libraries and make `MyAussenlichtTimer.py` executabl
 python3 -m pip install -r requirements.txt
 chmod +x MyAussenlichtTimer.py
 ```
-#### Crontab
+#### 4.3.3 Crontab
 > Note: depending on your local setup it might be sufficient to edit the user crontab. If this does not work however, you have to additionally edit the system wide crontab.
 
 __1. User Crontab__
@@ -134,7 +135,7 @@ Write the following line to the end of the file.
 ```bash
 */4 * * * * ubuntu /usr/bin/python3 /home/ubuntu/myapps/MyAussenlicht-master/Python/MyAussenlichtTimer.py >> /home/ubuntu/myapps/MyAussenlicht-master/Python/MyAussenlichtTimer.log
 ```
-#### Debugging
+#### 4.3.4 Debugging
 __1. Logfile__
 
 The cronjobs will write logging information to the `MyAussenlichtTimer.log` file. You can check if the MyAussenlichtTimer is running as intended by printing the content of the file to stdout.
@@ -156,7 +157,7 @@ __3. Print Syslog__
 ```bash
 sudo grep CRON /var/log/syslog
 ```
-### Testing
+### 4.4 Testing
 Install all python requirements via
 
 ```bash
