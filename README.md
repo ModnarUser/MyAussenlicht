@@ -5,7 +5,7 @@ MyAussenlicht is an ESP2866 based remote control for an outdoor light. A simple 
 * Manual Remote Control
 * Automated Remote Control with Sunrise and Sunset 
 
-## Table of Contents
+# Table of Contents
 <!--ts-->
 <!--te-->
 
