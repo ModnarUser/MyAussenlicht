@@ -4,6 +4,7 @@
 MyAussenlicht is an ESP2866 based remote control for an outdoor light. A simple server running on the ESP2866, that can be accessed via your local network, is utilized. Two use cases are supported:
 * Manual Remote Control
 * Automated Remote Control with Sunrise and Sunset 
+---
 
 __Table of Contents__
 <!--ts-->
@@ -24,7 +25,6 @@ __Table of Contents__
 <!-- Added by: runner, at: Mon May  3 20:24:53 UTC 2021 -->
 
 <!--te-->
-
 ---
 ## 1. Requirements
 * Arduino IDE
@@ -125,7 +125,7 @@ chmod +x MyAussenlichtTimer.py
 #### 4.3.3 Crontab
 > Note: depending on your local setup it might be sufficient to edit the user crontab. If this does not work however, you have to additionally edit the system wide crontab.
 
-__1. User Crontab__
+__A) User Crontab__
 
 Write the currently running cronjobs to a file.
 ```bash
@@ -142,7 +142,7 @@ sudo crontab cronfile
 ```
 Finally, you can check if the cronjob was successfully added with `sudo cronjob -l`.
 
-__2. System Wide Crontab__
+__B) System Wide Crontab__
 
 Open the system wide crontab at `/etc/crontab`
 ```bash
@@ -153,7 +153,7 @@ Write the following line to the end of the file.
 */4 * * * * ubuntu /usr/bin/python3 /home/ubuntu/myapps/MyAussenlicht-master/Python/MyAussenlichtTimer.py >> /home/ubuntu/myapps/MyAussenlicht-master/Python/MyAussenlichtTimer.log
 ```
 #### 4.3.4 Debugging
-__1. Logfile__
+__A) Logfile__
 
 The cronjobs will write logging information to the `MyAussenlichtTimer.log` file. You can check if the MyAussenlichtTimer is running as intended by printing the content of the file to stdout.
 ```bash
@@ -166,11 +166,11 @@ Connection to http://192.168.178.XX successful!
 now: 2021-05-01 10:32:02.210094+00:00    last_midnight: 2021-05-01 00:01:00+00:00        midnight: 2021-05-01 23:59:00+00:00     sunrise: 2021-05-01 04:00:00+00:00                      sunset: 2021-05-01 18:41:00+00:00                                                                             
 Außenlicht OFF    
 ```
-__2. Get System Time__
+__B) Get System Time__
 ```bash
 date "+%H:%M:%S   %d/%m/%y"
 ```
-__3. Print Syslog__
+__C) Print Syslog__
 ```bash
 sudo grep CRON /var/log/syslog
 ```
