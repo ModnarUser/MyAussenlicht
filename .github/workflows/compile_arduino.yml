@@ -18,5 +18,5 @@ steps:
         mv MyAussenlicht.ino ./MyAussenlicht/MyAussenlicht.ino
         ../bin/arduino-cli core install esp8266:esp8266
         ../bin/arduino-cli compile --fqbn esp8266:esp8266:d1_mini MyAussenlicht
-    - 
+
 
