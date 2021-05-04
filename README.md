@@ -1,4 +1,5 @@
 # MyAussenlicht
+[![Compile Firmware with Arduino CLI](https://github.com/ModnarUser/MyAussenlicht/actions/workflows/compile_arduino.yml/badge.svg)](https://github.com/ModnarUser/MyAussenlicht/actions/workflows/compile_arduino.yml)
 [![Python application](https://github.com/ModnarUser/MyAussenlicht/actions/workflows/python-app.yml/badge.svg)](https://github.com/ModnarUser/MyAussenlicht/actions/workflows/python-app.yml) [![Generate TOC](https://github.com/ModnarUser/MyAussenlicht/actions/workflows/generate_toc.yml/badge.svg)](https://github.com/ModnarUser/MyAussenlicht/actions/workflows/generate_toc.yml)
 
 MyAussenlicht is an ESP2866 based remote control for an outdoor light. A simple server running on the ESP2866, that can be accessed via your local network, is utilized. Two use cases are supported:
