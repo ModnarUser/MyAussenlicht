@@ -19,6 +19,7 @@ jobs:
         ls
         ./bin/arduino-cli config init --config-file Embedded/arduino-cli.yaml
         echo "confshow"
+        sudo cp Embedded/arduino-cli.yaml /home/runner/.arduino15/arduino-cli.yaml
         cat /home/runner/.arduino15/arduino-cli.yaml
         ./bin/arduino-cli core update-index
         cd Embedded
