@@ -11,31 +11,12 @@ steps:
     - name: Set up Arduino CLI
       run: |
         curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-        ./bin/arduino-cli config init
-        # add esp board to config init?
+        ./bin/arduino-cli config init --config-file ./Embedded/arduino-cli.yaml
         ./bin/arduino-cli core update-index
         cd Embedded
         mkdir MyAussenlicht
         mv MyAussenlicht.ino ./MyAussenlicht/MyAussenlicht.ino
         ../bin/arduino-cli core install esp8266:esp8266
         ../bin/arduino-cli compile --fqbn esp8266:esp8266:d1_mini MyAussenlicht
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
-      run: |
-        cd Python
-        pytest test_MyAussenlichtTimer.py --deselect test_MyAussenlichtTimer.py::test_simulate_for_number_of_days
-
-      - uses: actions/checkout@v2
-        with:
-          repository: ${{github.repository}}
-      - run: |
-          ls
-          curl https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-md-toc -o gh-md-toc
-          chmod a+x gh-md-toc
-          ./gh-md-toc --insert --no-backup *.md
+    - 
 
