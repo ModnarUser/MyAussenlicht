@@ -16,11 +16,12 @@ jobs:
     - name: Set up Arduino CLI
       run: |
         curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-        ./bin/arduino-cli config init --config-file ./Embedded/arduino-cli.yaml
+        ls
+        ./bin/arduino-cli config init --config-file Embedded/arduino-cli.yaml
         ./bin/arduino-cli core update-index
         cd Embedded
-        mkdir MyAussenlicht
-        mv MyAussenlicht.ino ./MyAussenlicht/MyAussenlicht.ino
+        sudo mkdir MyAussenlicht
+        sudo mv MyAussenlicht.ino ./MyAussenlicht/MyAussenlicht.ino
         ../bin/arduino-cli core install esp8266:esp8266
         ../bin/arduino-cli compile --fqbn esp8266:esp8266:d1_mini MyAussenlicht
 
