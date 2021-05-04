@@ -4,9 +4,9 @@ board_manager:
 daemon:
   port: "50051"
 directories:
-  data: /home/max/.arduino15
-  downloads: /home/max/.arduino15/staging
-  user: /home/max/Arduino
+  data: /home/runner/.arduino15
+  downloads: /home/runner/.arduino15/staging
+  user: /home/runner/Arduino
 library:
   enable_unsafe_install: false
 logging:
