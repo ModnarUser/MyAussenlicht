@@ -49,7 +49,7 @@ Open the `MyAussenlicht.ino`-file in the `Embedded` directory and replace the SS
 #endif
 ```
 
-Choose the `LOLIN(WEMOS) D1 R2 & mini` board, connect your board via USB, select the correct COM-port and press `upload to board`.
+Choose the `LOLIN(WEMOS) D1 R2 & mini` board, connect your board via USB, select the correct COM-port, and press `upload to board`.
 
 Upon bootup the ESP-module will attempt to connect to the specified WiFi network:
 
