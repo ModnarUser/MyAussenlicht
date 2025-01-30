@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - name: Set up and Compile
+      - name: Set up Arduino CLI
         run: |
           curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
           ./bin/arduino-cli config init --config-file Embedded/arduino-cli.yaml --overwrite
@@ -25,10 +25,16 @@ jobs:
           sudo mkdir -p MyAussenlicht
           sudo mv MyAussenlicht.ino MyAussenlicht/MyAussenlicht.ino
           ../bin/arduino-cli core install esp8266:esp8266
-          ../bin/arduino-cli compile --fqbn esp8266:esp8266:d1_mini --output-dir build MyAussenlicht
+          ../bin/arduino-cli compile \
+            --fqbn esp8266:esp8266:d1_mini \
+            --build-path MyAussenlicht/build \
+            MyAussenlicht
+          ls -R MyAussenlicht/build
 
       - name: Upload Firmware Artifact
         uses: actions/upload-artifact@v4
         with:
           name: MyAussenlicht-Firmware
-          path: Embedded/MyAussenlicht/build
+          path: |
+            Embedded/MyAussenlicht/build/**/*.bin
+            Embedded/MyAussenlicht/build/**/*.elf
