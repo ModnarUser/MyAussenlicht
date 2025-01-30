@@ -63,6 +63,9 @@ class Evaluate:
     def compute_aussenlicht_state(self):
         state = AussenlichtState.NO_ACTION
         to = self.TimeObject
+        to.last_midnight = to.last_midnight.astimezone(self.now.tzinfo)
+        to.midnight = to.midnight.astimezone(self.now.tzinfo)
+        to.sunset = to.sunset.astimezone(self.now.tzinfo)
         now = self.now
         if to.last_midnight < now < to.sunset:
             state = AussenlichtState.OFF
