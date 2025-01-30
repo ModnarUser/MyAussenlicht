@@ -2,9 +2,9 @@ name: Compile Firmware with Arduino CLI
 
 on:
   push:
-    branches: [master]
+    branches: [ master ]
   pull_request:
-    branches: [master]
+    branches: [ master ]
 
 jobs:
   build:
@@ -13,21 +13,22 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up Arduino CLI
+      - name: Set up and Compile
         run: |
           curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-          ls
           ./bin/arduino-cli config init --config-file Embedded/arduino-cli.yaml --overwrite
           ./bin/arduino-cli config add board_manager.additional_urls https://arduino.esp8266.com/stable/package_esp8266com_index.json \
-             --config-file Embedded/arduino-cli.yaml
-
-          echo "confshow"
-          cat Embedded/arduino-cli.yaml
+            --config-file Embedded/arduino-cli.yaml
           sudo cp Embedded/arduino-cli.yaml /home/runner/.arduino15/arduino-cli.yaml
-          cat /home/runner/.arduino15/arduino-cli.yaml
           ./bin/arduino-cli core update-index
           cd Embedded
-          sudo mkdir MyAussenlicht
+          sudo mkdir -p MyAussenlicht
           sudo mv MyAussenlicht.ino MyAussenlicht/MyAussenlicht.ino
           ../bin/arduino-cli core install esp8266:esp8266
-          ../bin/arduino-cli compile --fqbn esp8266:esp8266:d1_mini MyAussenlicht
+          ../bin/arduino-cli compile --fqbn esp8266:esp8266:d1_mini --output-dir build MyAussenlicht
+
+      - name: Upload Firmware Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: MyAussenlicht-Firmware
+          path: Embedded/MyAussenlicht/build
