@@ -27,9 +27,10 @@ jobs:
           sudo mv MyAussenlicht.ino MyAussenlicht/MyAussenlicht.ino
           ../bin/arduino-cli core install esp8266:esp8266
           sudo ../bin/arduino-cli compile \
-            --fqbn esp8266:esp8266:d1_mini \
-            --build-path MyAussenlicht/build \
-            MyAussenlicht
+          --config-file /home/runner/.arduino15/arduino-cli.yaml \
+          --fqbn esp8266:esp8266:d1_mini \
+          --build-path MyAussenlicht/build \
+          MyAussenlicht
           ls -R MyAussenlicht/build
 
       - name: Upload Firmware Artifact
