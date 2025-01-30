@@ -23,6 +23,7 @@ jobs:
           ./bin/arduino-cli core update-index
           cd Embedded
           sudo mkdir -p MyAussenlicht
+          sudo mkdir -p MyAussenlicht/build
           sudo mv MyAussenlicht.ino MyAussenlicht/MyAussenlicht.ino
           ../bin/arduino-cli core install esp8266:esp8266
           ../bin/arduino-cli compile \
