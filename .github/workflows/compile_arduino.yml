@@ -17,20 +17,19 @@ jobs:
         run: |
           curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
           ./bin/arduino-cli config init --config-file Embedded/arduino-cli.yaml --overwrite
-          ./bin/arduino-cli config add board_manager.additional_urls https://arduino.esp8266.com/stable/package_esp8266com_index.json \
+          ./bin/arduino-cli config add board_manager.additional_urls \
+            https://arduino.esp8266.com/stable/package_esp8266com_index.json \
             --config-file Embedded/arduino-cli.yaml
-          sudo cp Embedded/arduino-cli.yaml /home/runner/.arduino15/arduino-cli.yaml
+          cp Embedded/arduino-cli.yaml /home/runner/.arduino15/arduino-cli.yaml
           ./bin/arduino-cli core update-index
           cd Embedded
-          sudo mkdir -p MyAussenlicht
-          sudo mkdir -p MyAussenlicht/build
-          sudo mv MyAussenlicht.ino MyAussenlicht/MyAussenlicht.ino
+          mkdir -p MyAussenlicht/build
+          mv MyAussenlicht.ino MyAussenlicht/MyAussenlicht.ino
           ../bin/arduino-cli core install esp8266:esp8266
-          sudo ../bin/arduino-cli compile \
-          --config-file /home/runner/.arduino15/arduino-cli.yaml \
-          --fqbn esp8266:esp8266:d1_mini \
-          --build-path MyAussenlicht/build \
-          MyAussenlicht
+          ../bin/arduino-cli compile \
+            --fqbn esp8266:esp8266:d1_mini \
+            --build-path MyAussenlicht/build \
+            MyAussenlicht
           ls -R MyAussenlicht/build
 
       - name: Upload Firmware Artifact
@@ -39,4 +38,3 @@ jobs:
           name: MyAussenlicht-Firmware
           path: |
             Embedded/MyAussenlicht/build/**/*.bin
-            Embedded/MyAussenlicht/build/**/*.elf
